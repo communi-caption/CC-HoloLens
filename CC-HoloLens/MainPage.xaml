@@ -9,6 +9,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <CaptureElement Name="PreviewControl" Stretch="Uniform" />
+        <CaptureElement Name="previewControl" Stretch="Uniform" />
+        <TextBlock Name="textBlock" ></TextBlock>
     </Grid>
 </Page>
