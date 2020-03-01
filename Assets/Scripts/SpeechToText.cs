@@ -9,7 +9,6 @@ public class SpeechToText : MonoBehaviour
 
     private object threadLocker = new object();
     private bool waitingForReco;
-    private string message;
 
     private bool micPermissionGranted = false;
 
@@ -18,7 +17,7 @@ public class SpeechToText : MonoBehaviour
         // Creates an instance of a speech config with specified subscription key and service region.
         // Replace with your own subscription key and service region (e.g., "westus").
         var config = SpeechConfig.FromSubscription("30d4a56bf88c4437aa1e5aa0d9560eb8", "westus");
-        config.SpeechRecognitionLanguage = "tr-TR";
+        config.SpeechRecognitionLanguage = "en-US";
 
         // Creates an instance of AutoDetectSourceLanguageConfig with the 2 source language candidates
         // Currently this feature only supports 2 different language candidates
@@ -36,7 +35,7 @@ public class SpeechToText : MonoBehaviour
             {
                 if (e.Result.Reason == ResultReason.RecognizingSpeech)
                 {
-                    NotifyUser($"{e.Result.Text}");
+                    OnSourceTextSet($"{e.Result.Text}");
                     // Retrieve the detected language
                     var autoDetectSourceLanguageResult = AutoDetectSourceLanguageResult.FromResult(e.Result);
                     //NotifyUser($"DETECTED: Language={autoDetectSourceLanguageResult.Language}");
@@ -47,26 +46,26 @@ public class SpeechToText : MonoBehaviour
             {
                 if (e.Result.Reason == ResultReason.RecognizedSpeech)
                 {
-                    NotifyUser($"{e.Result.Text}");
+                    OnSourceTextSet($"{e.Result.Text}");
                     // Retrieve the detected language
                     var autoDetectSourceLanguageResult = AutoDetectSourceLanguageResult.FromResult(e.Result);
                     //NotifyUser($"DETECTED: Language={autoDetectSourceLanguageResult.Language}");
                 }
                 else if (e.Result.Reason == ResultReason.NoMatch)
                 {
-                    NotifyUser($"NOMATCH: Speech could not be recognized.");
+                    OnSourceTextSet($"NOMATCH: Speech could not be recognized.");
                 }
             };
 
             recognizer.Canceled += (s, e) =>
             {
-                NotifyUser($"CANCELED: Reason={e.Reason}");
+                OnSourceTextSet($"CANCELED: Reason={e.Reason}");
 
                 if (e.Reason == CancellationReason.Error)
                 {
-                    NotifyUser($"CANCELED: ErrorCode={e.ErrorCode}");
-                    NotifyUser($"CANCELED: ErrorDetails={e.ErrorDetails}");
-                    NotifyUser($"CANCELED: Did you update the subscription info?");
+                    OnSourceTextSet($"CANCELED: ErrorCode={e.ErrorCode}");
+                    OnSourceTextSet($"CANCELED: ErrorDetails={e.ErrorDetails}");
+                    OnSourceTextSet($"CANCELED: Did you update the subscription info?");
                 }
 
                 stopRecognition.TrySetResult(0);
@@ -74,13 +73,13 @@ public class SpeechToText : MonoBehaviour
 
             recognizer.SessionStarted += (s, e) =>
             {
-                NotifyUser("Session started event.");
+                OnSourceTextSet("Session started event.");
             };
 
             recognizer.SessionStopped += (s, e) =>
             {
-                NotifyUser("Session stopped event.");
-                NotifyUser("Stop recognition.");
+                OnSourceTextSet("Session stopped event.");
+                OnSourceTextSet("Stop recognition.");
                 stopRecognition.TrySetResult(0);
             };
 
@@ -96,8 +95,8 @@ public class SpeechToText : MonoBehaviour
         }
     }
 
-    private void NotifyUser(string s) {
-        message = s;
+    private void OnSourceTextSet(string s) {
+        Global.Text1 = s;
     }
 
     void Start()
@@ -111,7 +110,7 @@ public class SpeechToText : MonoBehaviour
         else
         {
             micPermissionGranted = true;
-            message = "...";
+            Global.Text1 = "...";
         }
     }
 
@@ -121,7 +120,7 @@ public class SpeechToText : MonoBehaviour
         {
             if (outputText != null)
             {
-                outputText.text = message;
+                outputText.text = Global.Text3;
             }
         }
     }

@@ -1,153 +1,37 @@
-﻿using System.Collections;
-using System;
-using System.Xml;
-using UnityEngine.Networking;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class YTranslate
+public class TranslateLanguage : MonoBehaviour
 {
-    private string apiKey;
-
-    public YTranslate(string apiKey)
+    void Start()
     {
-        this.apiKey = apiKey;
+        StartCoroutine("Loop");
     }
 
-    public class Result
+    private IEnumerator Loop()
     {
-        public const int NETWORK_ERROR = -1;
-        public const int SUCCESS = 200;
-        public const int INVALID_API_KEY = 401;
-        public const int BLOCKED_API_KEY = 402;
-        public const int DAILY_REQUESTS_EXCEEDED = 403;
-        public const int DAILY_TEXT_EXCEEDED = 404;
-        public const int TEXT_LENGTH_EXCEEDED = 413;
-        public const int CANNOT_TRANSLATE = 422;
-        public const int UNSUPPORTED_DIRECTION = 501;
+        var translate = new YTranslate("trnsl.1.1.20200229T212133Z.e184ed33afc29e8a.334aa1670617dbfd188616640084847d586e1852");
 
-        public readonly int status;
-        public readonly Language language;
-        public readonly string translatedText;
-
-        public Result(int status, Language language, string translatedText)
+        while (true)
         {
-            this.status = status;
-            this.language = language;
-            this.translatedText = translatedText;
+            while (string.IsNullOrEmpty(Global.Text1))
+                yield return null;
+
+            string old = Global.Text1;
+
+            YTranslate.Result result = null;
+            Action<YTranslate.Result> action = (r) => {
+                result = r;
+            };
+            yield return translate.translate(old, YTranslate.Language.TR, action);
+            if (result == null)
+                continue;
+            Debug.Log(result.translatedText);
+            Global.Text2 = result.translatedText;
+            Global.Text3 = $"{old}\n<color=magenta>{result.translatedText}</color>";
+            //Global.Text1 = null;
         }
     }
-
-    public IEnumerator translate(string text, Language to, System.Action<Result> callback)
-    {
-        return translate(text, null, to, callback);
-    }
-
-    public IEnumerator translate(string text, Language? from, Language to, System.Action<Result> callback)
-    {
-        string encodedText = UnityWebRequest.EscapeURL(text);
-        string lang = ((from != null ? Enum.GetName(typeof(Language), from) + "-" : "") + Enum.GetName(typeof(Language), to)).ToLower();
-        string requestUrl = string.Format("https://translate.yandex.net/api/v1.5/tr/translate?key={0}&text={1}&lang={2}", apiKey, encodedText, lang);
-        UnityWebRequest request = UnityWebRequest.Get(requestUrl);
-        yield return request.SendWebRequest();
-        Result result;
-        if (request.isNetworkError)
-        {
-            result = new Result(Result.NETWORK_ERROR, to, null);
-        }
-        else
-        {
-            string responseText = request.downloadHandler.text;
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(responseText);
-
-            XmlNode translation = doc.SelectSingleNode("Translation");
-            XmlNode error = doc.SelectSingleNode("Error");
-
-            int status;
-            string translatedText;
-
-            if (translation != null)
-            {
-                status = int.Parse(translation.Attributes["code"].Value);
-                translatedText = doc.SelectSingleNode("Translation/text").InnerText;
-            }
-            else
-            {
-                status = int.Parse(error.Attributes["code"].Value);
-                translatedText = null;
-            }
-            result = new Result(status, to, translatedText);
-        }
-        callback(result);
-    }
-
-    public enum Language
-    {
-        SQ,
-        EN,
-        AR,
-        HY,
-        AZ,
-        AF,
-        EU,
-        BE,
-        BG,
-        BS,
-        CY,
-        VI,
-        HU,
-        HT,
-        GL,
-        NL,
-        EL,
-        KA,
-        DA,
-        HE,
-        ID,
-        GA,
-        IT,
-        IS,
-        ES,
-        KK,
-        CA,
-        KY,
-        ZH,
-        KO,
-        LA,
-        LV,
-        LT,
-        MG,
-        MS,
-        MT,
-        MK,
-        MN,
-        DE,
-        NO,
-        FA,
-        PL,
-        PT,
-        RO,
-        RU,
-        SR,
-        SK,
-        SL,
-        SW,
-        TG,
-        TH,
-        TL,
-        TT,
-        TR,
-        UZ,
-        UK,
-        FI,
-        FR,
-        HR,
-        CS,
-        SV,
-        ET,
-        JA
-    };
-
-
-
-
 }

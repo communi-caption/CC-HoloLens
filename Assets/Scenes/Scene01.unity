@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: 480084805}
   - component: {fileID: 480084807}
   - component: {fileID: 480084808}
+  - component: {fileID: 480084809}
   m_Layer: 0
   m_Name: Communicaption
   m_TagString: Untagged
@@ -188,6 +189,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outputText: {fileID: 1195042191}
+--- !u!114 &480084809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 480084804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9264c68dd4aaa0646820006e7ccd4b22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &959433555
 GameObject:
   m_ObjectHideFlags: 0
