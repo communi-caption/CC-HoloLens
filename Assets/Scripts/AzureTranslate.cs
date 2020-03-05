@@ -58,38 +58,32 @@ public class AzureTranslate : MonoBehaviour
     private IEnumerator Loop()
     {
         var sw = new System.Diagnostics.Stopwatch();
+        sw.Start();
+
         while (true)
         {
-            //curl -X POST "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=en&to=de&profanityAction=Marked&profanityMarker=Tag" -H "Ocp-Apim-Subscription-Key: <client-secret>" -H "Content-Type: application/json; charset=UTF-8" -d "[{'Text':'This is a freaking good idea.'}]"
+            //Global.Text3 = Global.Text1;
 
-            //
-            {
-                string requestUrl = string.Format("https://beyzalitranslate.cognitiveservices.azure.com/sts/v1.0/issuetoken");
-                var request = new UnityWebRequest(requestUrl, "POST");
-                request.SetRequestHeader("Ocp-Apim-Subscription-Key", "f8d120b88fc148afac4b202241bd399a");
-                request.uploadHandler = (UploadHandler)new UploadHandlerRaw(new byte[1]);
-                request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-                request.SetRequestHeader("Content-Type", "application/json");
-                yield return request.SendWebRequest();
-                Debug.Log("Status Code: " + request.responseCode);
-                Debug.Log("Text: " + (request.downloadHandler.text));
-            }
+            sw.Restart();
 
-            {
-                object[] body = new object[] { new { Text = "hello bitches" } };
-                var requestBody = JsonConvert.SerializeObject(body);
-                string requestUrl = string.Format("https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=en&to=de&profanityAction=Marked&profanityMarker=Tag");
-                var request = new UnityWebRequest(requestUrl, "POST");
-                request.SetRequestHeader("Ocp-Apim-Subscription-Key", "f8d120b88fc148afac4b202241bd399a");
-                byte[] bodyRaw = Encoding.UTF8.GetBytes(requestBody);
-                request.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
-                request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-                request.SetRequestHeader("Content-Type", "application/json");
-                yield return request.SendWebRequest();
-                Debug.Log("Status Code: " + request.responseCode);
-                Debug.Log("Text: " + (request.downloadHandler.text));
-            }
-           
+            object[] body = new object[] { new { Text = Global.Text1 } };
+            var requestBody = JsonConvert.SerializeObject(body);
+            string requestUrl = string.Format("https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=en&to=tr&profanityAction=Marked&profanityMarker=Tag");
+            //string requestUrl = string.Format("http://aligungor.org/etuders");
+            var request = new UnityWebRequest(requestUrl, "POST");
+            request.SetRequestHeader("Ocp-Apim-Subscription-Key", "f8d120b88fc148afac4b202241bd399a");
+            byte[] bodyRaw = Encoding.UTF8.GetBytes(requestBody);
+            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+            yield return request.SendWebRequest();
+            Debug.Log("Status Code: " + request.responseCode);
+            Debug.Log("Text: " + (request.downloadHandler.text));
+            Debug.Log("Time:" + sw.ElapsedMilliseconds);
+
+            //GetComponentInChildren<Text>().text = sw.ElapsedMilliseconds + " ms\n" + request.downloadHandler.text;
+            Global.Text3 = sw.ElapsedMilliseconds + " ms\n" + request.downloadHandler.text;
+            yield return new WaitForSecondsRealtime(.25f);
         }
     }
 }

@@ -16,7 +16,7 @@ public class TranslateLanguage : MonoBehaviour
 
         while (true)
         {
-            while (string.IsNullOrEmpty(Global.Text1))
+            while (string.IsNullOrEmpty(Global.Text1) || true)
                 yield return null;
 
             string old = Global.Text1;
