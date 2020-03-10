@@ -62,16 +62,13 @@ public class AzureTranslate : MonoBehaviour
 
         while (true)
         {
-            //Global.Text3 = Global.Text1;
-
             sw.Restart();
 
             object[] body = new object[] { new { Text = Global.Text1 } };
             var requestBody = JsonConvert.SerializeObject(body);
             string requestUrl = string.Format("https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=en&to=tr&profanityAction=Marked&profanityMarker=Tag");
-            //string requestUrl = string.Format("http://aligungor.org/etuders");
             var request = new UnityWebRequest(requestUrl, "POST");
-            request.SetRequestHeader("Ocp-Apim-Subscription-Key", "f8d120b88fc148afac4b202241bd399a");
+            request.SetRequestHeader("Ocp-Apim-Subscription-Key", "318b6be29aee4625b67575a752a92e64");
             byte[] bodyRaw = Encoding.UTF8.GetBytes(requestBody);
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -81,7 +78,6 @@ public class AzureTranslate : MonoBehaviour
             Debug.Log("Text: " + (request.downloadHandler.text));
             Debug.Log("Time:" + sw.ElapsedMilliseconds);
 
-            //GetComponentInChildren<Text>().text = sw.ElapsedMilliseconds + " ms\n" + request.downloadHandler.text;
             Global.Text3 = sw.ElapsedMilliseconds + " ms\n" + request.downloadHandler.text;
             yield return new WaitForSecondsRealtime(.25f);
         }
