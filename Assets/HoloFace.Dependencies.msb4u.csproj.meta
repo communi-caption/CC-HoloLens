@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: f5032ed399fce054e9b8ce3c4adb4d0e
+ScriptedImporter:
+  fileIDToRecycleName:
+    11400000: HoloFace.Dependencies.msb4u
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 0e4dca1acba66fd478b3854f09a32ec7, type: 3}
+  buildEngine: 0
+  profiles: []

@@ -517,7 +517,7 @@ PlayerSettings:
   scriptingDefineSymbols:
     4: 
     7: 
-    14: 
+    14: DOTNETWINRT_PRESENT
   platformArchitecture: {}
   scriptingBackend:
     Metro: 1
