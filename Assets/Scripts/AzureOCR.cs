@@ -7,6 +7,8 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
+using Newtonsoft.Json;
+using System.Linq;
 
 #if WINDOWS_UWP
 using Windows.Graphics.Imaging;
@@ -94,6 +96,21 @@ public class AzureOCR : MonoBehaviour
             Debug.Log(">>>>> Status Code: " + request.responseCode);
             Debug.Log(">>>>> Text: " + (request.downloadHandler.text));
             Debug.Log(">>>>> Time222: " + sw.ElapsedMilliseconds);
+
+            var result = JsonConvert.DeserializeObject<OCRResult>(request.downloadHandler.text);
+            var boundingBox = result.Regions[0].Lines[0].Words[0].BoundingBox;
+            var uj = boundingBox.Split(',').Select(int.Parse).ToArray();
+
+            var leftTop = new Vector2(uj[0],uj[1]);
+            var leftBottom = new Vector2(uj[0],uj[1]+uj[3]);
+            var rightTop = new Vector2(uj[0] + uj[2],uj[1]);
+            var rightBottom = new Vector2(uj[0] + uj[2],uj[1] + uj[3]);
+
+            leftTop = webcam.WebcamToWorldMatrix * leftTop;
+            leftBottom = webcam.WebcamToWorldMatrix * leftBottom;
+            rightTop = webcam.WebcamToWorldMatrix * rightTop;
+            rightBottom = webcam.WebcamToWorldMatrix * rightBottom;
+            FindObjectOfType<OCRTextRenderer>().Render((leftTop + leftBottom + rightTop + rightBottom) / 4, rightTop.x - leftTop.x, leftBottom.y - leftTop.y, 0, result.Regions[0].Lines[0].Words[0].Text);
 #endif
             yield return null;
         }
