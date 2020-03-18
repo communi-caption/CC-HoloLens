@@ -68,7 +68,7 @@ public class AzureTranslate : MonoBehaviour
             var requestBody = JsonConvert.SerializeObject(body);
             string requestUrl = string.Format("https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=en&to=tr&profanityAction=Marked&profanityMarker=Tag");
             var request = new UnityWebRequest(requestUrl, "POST");
-            request.SetRequestHeader("Ocp-Apim-Subscription-Key", "318b6be29aee4625b67575a752a92e64");
+            request.SetRequestHeader("Ocp-Apim-Subscription-Key", KeyManager.TranslateSubscription);
             byte[] bodyRaw = Encoding.UTF8.GetBytes(requestBody);
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
             request.downloadHandler = new DownloadHandlerBuffer();

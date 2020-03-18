@@ -68,7 +68,7 @@ public class AzureOCR : MonoBehaviour
             string uri = "https://francecentral.api.cognitive.microsoft.com/vision/v2.0/ocr?language=unk&detectOrientation=true";
 
             var request = new UnityWebRequest(uri, "POST");
-            request.SetRequestHeader("Ocp-Apim-Subscription-Key", "14449e1ac3414b5c894fbdca8c38b911");
+            request.SetRequestHeader("Ocp-Apim-Subscription-Key", KeyManager.OCRSubscription);
             request.SetRequestHeader("Content-Type", "application/octet-stream");
 
             var softwareBitmap = webcam.GetImage();
@@ -106,10 +106,15 @@ public class AzureOCR : MonoBehaviour
             var rightTop = new Vector2(uj[0] + uj[2],uj[1]);
             var rightBottom = new Vector2(uj[0] + uj[2],uj[1] + uj[3]);
 
-            leftTop = webcam.WebcamToWorldMatrix * leftTop;
-            leftBottom = webcam.WebcamToWorldMatrix * leftBottom;
-            rightTop = webcam.WebcamToWorldMatrix * rightTop;
-            rightBottom = webcam.WebcamToWorldMatrix * rightBottom;
+            var matrix = webcam.WebcamToWorldMatrix;
+
+            Debug.Log(">>>  === >>>");
+            Debug.Log(matrix);
+
+            leftTop = matrix * leftTop;
+            leftBottom = matrix * leftBottom;
+            rightTop = matrix * rightTop;
+            rightBottom = matrix * rightBottom;
             FindObjectOfType<OCRTextRenderer>().Render((leftTop + leftBottom + rightTop + rightBottom) / 4, rightTop.x - leftTop.x, leftBottom.y - leftTop.y, 0, result.Regions[0].Lines[0].Words[0].Text);
 #endif
             yield return null;

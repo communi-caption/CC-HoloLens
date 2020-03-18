@@ -16,7 +16,7 @@ public class SpeechToText : MonoBehaviour
     {
         // Creates an instance of a speech config with specified subscription key and service region.
         // Replace with your own subscription key and service region (e.g., "westus").
-        var config = SpeechConfig.FromSubscription("30d4a56bf88c4437aa1e5aa0d9560eb8", "westus");
+        var config = SpeechConfig.FromSubscription(KeyManager.SpeechToTextSubscription, KeyManager.SpeechToTextLocation);
         config.SpeechRecognitionLanguage = "en-US";
 
         // Creates an instance of AutoDetectSourceLanguageConfig with the 2 source language candidates
