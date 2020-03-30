@@ -25,6 +25,10 @@ public class OCRTextRenderer : MonoBehaviour
 
     public void Render(Vector2 center, float width, float height, float rotationZ, string text)
     {
+        Debug.Log(">>>>> center: " + center);
+        Debug.Log(">>>>> width: " + width);
+        Debug.Log(">>>>> height: " + height);
+
         Vector2 centerTransformed = Camera.main.WorldToViewportPoint(center);
         Vector2 leftTransformed = Camera.main.WorldToViewportPoint(center - Vector2.left * width);
         Vector2 topTransformed = Camera.main.WorldToViewportPoint(center + Vector2.up * height);
@@ -49,5 +53,9 @@ public class OCRTextRenderer : MonoBehaviour
         uiRect.Rotate(0, 0, rotationZ);
 
         GetComponentInChildren<Text>().text = text;
+
+        Debug.Log(">>>>> centerNormalized: " + centerNormalized);
+        Debug.Log(">>>>> widthTransformed: " + widthTransformed);
+        Debug.Log(">>>>> heightTransformed: " + heightTransformed);
     }
 }
