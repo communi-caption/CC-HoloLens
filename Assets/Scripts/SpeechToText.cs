@@ -35,6 +35,7 @@ public class SpeechToText : MonoBehaviour
             {
                 if (e.Result.Reason == ResultReason.RecognizingSpeech)
                 {
+                    //KeywordCatcher.NotifyRecognize(e.Result.Text);
                     OnSourceTextSet($"{e.Result.Text}");
                     // Retrieve the detected language
                     var autoDetectSourceLanguageResult = AutoDetectSourceLanguageResult.FromResult(e.Result);
@@ -46,6 +47,7 @@ public class SpeechToText : MonoBehaviour
             {
                 if (e.Result.Reason == ResultReason.RecognizedSpeech)
                 {
+                    KeywordCatcher.NotifyRecognize(e.Result.Text);
                     OnSourceTextSet($"{e.Result.Text}");
                     // Retrieve the detected language
                     var autoDetectSourceLanguageResult = AutoDetectSourceLanguageResult.FromResult(e.Result);

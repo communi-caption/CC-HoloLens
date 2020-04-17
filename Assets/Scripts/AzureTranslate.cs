@@ -74,9 +74,9 @@ public class AzureTranslate : MonoBehaviour
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SetRequestHeader("Content-Type", "application/json");
             yield return request.SendWebRequest();
-            Debug.Log("Status Code: " + request.responseCode);
-            Debug.Log("Text: " + (request.downloadHandler.text));
-            Debug.Log("Time:" + sw.ElapsedMilliseconds);
+            //Debug.Log("Status Code: " + request.responseCode);
+            //Debug.Log("Text: " + (request.downloadHandler.text));
+            //Debug.Log("Time:" + sw.ElapsedMilliseconds);
 
             Global.Text3 = sw.ElapsedMilliseconds + " ms\n" + request.downloadHandler.text;
             yield return new WaitForSecondsRealtime(.25f);

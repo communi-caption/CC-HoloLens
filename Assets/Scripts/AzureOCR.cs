@@ -38,7 +38,8 @@ public class AzureOCR : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine("Deneme");
+        // todo
+        //StartCoroutine("Deneme");
     }
 
     private async Task<byte[]> SoftwareBitmapToByteArray(SoftwareBitmap softwareBitmap)

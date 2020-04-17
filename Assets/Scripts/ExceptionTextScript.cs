@@ -5,9 +5,12 @@ using UnityEngine.UI;
 
 public class ExceptionTextScript : MonoBehaviour
 {
+    private Text text;
+
     void Awake()
     {
         Application.logMessageReceived += Application_logMessageReceived;
+        text = GetComponent<Text>();
     }
 
     private void Application_logMessageReceived(string condition, string stackTrace, LogType type)
@@ -19,6 +22,6 @@ public class ExceptionTextScript : MonoBehaviour
 
     public void SetText(string s)
     {
-        GetComponent<Text>().text += s + System.Environment.NewLine;
+        text.text += s + System.Environment.NewLine;
     }
 }
