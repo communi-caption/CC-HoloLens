@@ -24,4 +24,8 @@ public class ExceptionTextScript : MonoBehaviour
     {
         text.text += s + System.Environment.NewLine;
     }
+
+    public static void SetText2(string s) {
+        FindObjectOfType<ExceptionTextScript>().SetText(s);
+    }
 }

@@ -8,8 +8,9 @@ public class KeywordCatcher : MonoBehaviour {
     private static KeywordCatcher instance;
     
     ////////////////////////////////////
-    public const string KEYWORD_CAPTURE = "capture";
-    private static readonly string[] KEYWORDS = new string[] { KEYWORD_CAPTURE };
+    public const string KEYWORD_CAPTURE_PHOTO = "capture photo";
+    public const string KEYWORD_CAPTURE_TEXT = "capture text";
+    private static readonly string[] KEYWORDS = new string[] { KEYWORD_CAPTURE_PHOTO, KEYWORD_CAPTURE_TEXT };
     ////////////////////////////////////
 
     private static Dictionary<string, long> timeCache;
@@ -66,15 +67,18 @@ public class KeywordCatcher : MonoBehaviour {
         }
 
         switch (keyword) {
-            case KEYWORD_CAPTURE:
-                OnCapture();
+            case KEYWORD_CAPTURE_PHOTO:
+                OnCapturePhoto(false);
+                break;
+            case KEYWORD_CAPTURE_TEXT:
+                OnCapturePhoto(true);
                 break;
             default:
                 break;
         }
     }
 
-    private void OnCapture() {
-        photoCapturer.Capture();
+    private void OnCapturePhoto(bool isText) {
+        photoCapturer.Capture(isText);
     }
 }

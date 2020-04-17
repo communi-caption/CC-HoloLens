@@ -46,11 +46,13 @@ public class PhotoCapturer : MonoBehaviour {
         return array;
     }
 
-    public void Capture() {
-        StartCoroutine("StartCapture");
+    public void Capture(bool isText) {
+        StartCoroutine(StartCapture(isText));
     }
 
-    private IEnumerator StartCapture() {
+    private IEnumerator StartCapture(bool isText) {
+        ExceptionTextScript.SetText2("IEnumerator StartCapturebool " +  isText);
+
 #if WINDOWS_UWP
         var softwareBitmap = webcam.GetImage();
         if (softwareBitmap == null) {
@@ -69,27 +71,37 @@ public class PhotoCapturer : MonoBehaviour {
         }
 
         GeneralTextAnimator.Spawn("Captured.");
-        ShowOnScreen(bitmap, webcam.Width, webcam.Height);
+        ShowOnScreen(bitmap, webcam.Width, webcam.Height, isText);
 #endif
         yield return null;
     }
 
-    private void ShowOnScreen(byte[] data, int w, int h) {
-        StartCoroutine(SendSaveMediaRequest(data));
+    private void ShowOnScreen(byte[] data, int w, int h, bool isText) {
+        StartCoroutine(SendSaveMediaRequest(data, isText));
         //var texture = new Texture2D(w, h);
         //texture.LoadImage(data);
         //overlayImage.sprite = Sprite.Create(texture, new Rect(0, 0, w, h), new Vector2(.5f, .5f));
     }
 
-    private IEnumerator SendSaveMediaRequest(byte[] data) {
-        var request = new UnityWebRequest(Global.HOST + "saveMediaMessage", "POST");
+    private IEnumerator SendSaveMediaRequest(byte[] data, bool isText) {
+        string path = isText ? "saveTextMessage" : "saveMediaMessage";
+
+        var request = new UnityWebRequest(Global.HOST + path, "POST");
         request.SetRequestHeader("content-type", "application/json");
 
-        var json = JsonConvert.SerializeObject(new {
-            FileSize = data.Length,
-            MediaType = false,
-            Data = data
-        });
+        string json;
+        
+        if (isText) {
+            json = JsonConvert.SerializeObject(new {
+                Data = data
+            });
+        } else {
+            json = JsonConvert.SerializeObject(new {
+                FileSize = data.Length,
+                MediaType = false,
+                Data = data
+            });
+        }
 
         request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
         request.downloadHandler = new DownloadHandlerBuffer();

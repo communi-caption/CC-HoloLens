@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -78,7 +79,10 @@ public class AzureTranslate : MonoBehaviour
             //Debug.Log("Text: " + (request.downloadHandler.text));
             //Debug.Log("Time:" + sw.ElapsedMilliseconds);
 
-            Global.Text3 = sw.ElapsedMilliseconds + " ms\n" + request.downloadHandler.text;
+            try {
+                Global.Text3 = JArray.Parse(request.downloadHandler.text)[0]["translations"][0]["text"]?.ToString();
+            }
+            catch { }
             yield return new WaitForSecondsRealtime(.25f);
         }
     }
