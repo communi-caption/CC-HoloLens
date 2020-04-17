@@ -36,12 +36,13 @@ public class HoloFaceCore : MonoBehaviour
     int frameReportPeriod = 10;
     int frameCounter = 0;
 
-    bool faceDetected;
+    public static bool faceDetected;
 
     void Start()
     {
         webcam = GetComponent<HololensCameraUWP>();
         localFaceTracker = new LocalFaceTracker(LocalTrackerNumberOfIters, LocalTrackerConfidenceThreshold);
+        faceDetected = false;
     }
 
 #if WINDOWS_UWP

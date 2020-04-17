@@ -65,25 +65,33 @@ public class AzureTranslate : MonoBehaviour
         {
             sw.Restart();
 
-            object[] body = new object[] { new { Text = Global.Text1 } };
-            var requestBody = JsonConvert.SerializeObject(body);
-            string requestUrl = string.Format("https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=en&to=tr&profanityAction=Marked&profanityMarker=Tag");
-            var request = new UnityWebRequest(requestUrl, "POST");
-            request.SetRequestHeader("Ocp-Apim-Subscription-Key", KeyManager.TranslateSubscription);
-            byte[] bodyRaw = Encoding.UTF8.GetBytes(requestBody);
-            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            request.SetRequestHeader("Content-Type", "application/json");
-            yield return request.SendWebRequest();
-            //Debug.Log("Status Code: " + request.responseCode);
-            //Debug.Log("Text: " + (request.downloadHandler.text));
-            //Debug.Log("Time:" + sw.ElapsedMilliseconds);
+            if (SettingsController.settings.TranslateLanguage == "0") {
+                var fromLang = SettingsController.settings.ForeignLanguageCode;
+                var toLang = SettingsController.settings.NativeLanguageCode;
 
-            try {
-                Global.Text3 = JArray.Parse(request.downloadHandler.text)[0]["translations"][0]["text"]?.ToString();
+                object[] body = new object[] { new { Text = Global.Text1 } };
+                var requestBody = JsonConvert.SerializeObject(body);
+                string requestUrl = $"https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from={fromLang}&to={toLang}&profanityAction=Marked&profanityMarker=Tag";
+                var request = new UnityWebRequest(requestUrl, "POST");
+                request.SetRequestHeader("Ocp-Apim-Subscription-Key", KeyManager.TranslateSubscription);
+                byte[] bodyRaw = Encoding.UTF8.GetBytes(requestBody);
+                request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                request.downloadHandler = new DownloadHandlerBuffer();
+                request.SetRequestHeader("Content-Type", "application/json");
+                yield return request.SendWebRequest();
+                //Debug.Log("Status Code: " + request.responseCode);
+                //Debug.Log("Text: " + (request.downloadHandler.text));
+                //Debug.Log("Time:" + sw.ElapsedMilliseconds);
+
+                try {
+                    Global.Text3 = JArray.Parse(request.downloadHandler.text)[0]["translations"][0]["text"]?.ToString();
+                }
+                catch { }
+                yield return new WaitForSecondsRealtime(.25f);
+            } else {
+                Global.Text3 = Global.Text1;
+                yield return null;
             }
-            catch { }
-            yield return new WaitForSecondsRealtime(.25f);
         }
     }
 }
