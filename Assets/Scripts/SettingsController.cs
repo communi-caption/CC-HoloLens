@@ -10,6 +10,21 @@ public class Settings {
     public string ForeignLanguageCode { get; set; } = "en";
     public string SubtitleTrigger { get; set; } = "0";
     public string TranslateLanguage { get; set; } = "0";
+
+    public string AdjustedNativeLanguage() {
+        return AdjustLanguage(NativeLanguageCode);
+    }
+
+    public string AdjustedForeignLanguage() {
+        return AdjustLanguage(ForeignLanguageCode);
+    }
+
+    private static string AdjustLanguage(string code) {
+        code = code.ToLower();
+        if (code == "en") return "en-US";
+        if (code.Contains("-")) return code;
+        return code + "-" + code.ToUpperInvariant();
+    }
 }
 
 public class SettingsController : MonoBehaviour {

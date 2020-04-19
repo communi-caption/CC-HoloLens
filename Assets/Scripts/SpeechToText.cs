@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Microsoft.CognitiveServices.Speech;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 public class SpeechToText : MonoBehaviour {
     public Text outputText;
@@ -12,12 +13,12 @@ public class SpeechToText : MonoBehaviour {
     private bool micPermissionGranted = false;
 
     public async void ButtonClick() {
-        Debug.Log("initializing speech recognizer with language: " + SettingsController.settings.ForeignLanguageCode);
+        Debug.Log("initializing speech recognizer with language: " + SettingsController.settings.AdjustedForeignLanguage());
 
         // Creates an instance of a speech config with specified subscription key and service region.
         // Replace with your own subscription key and service region (e.g., "westus").
         var config = SpeechConfig.FromSubscription(KeyManager.SpeechToTextSubscription, KeyManager.SpeechToTextLocation);
-        config.SpeechRecognitionLanguage = SettingsController.settings.ForeignLanguageCode;
+        config.SpeechRecognitionLanguage = SettingsController.settings.AdjustedForeignLanguage();
 
         // Creates an instance of AutoDetectSourceLanguageConfig with the 2 source language candidates
         // Currently this feature only supports 2 different language candidates
@@ -74,6 +75,7 @@ public class SpeechToText : MonoBehaviour {
                 OnSourceTextSet("Stop recognition.");
                 stopRecognition.TrySetResult(0);
             };
+
 
             // Starts continuous recognition. Uses StopContinuousRecognitionAsync() to stop recognition.
             await recognizer.StartContinuousRecognitionAsync().ConfigureAwait(false);
