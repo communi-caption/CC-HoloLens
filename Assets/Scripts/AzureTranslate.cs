@@ -65,7 +65,7 @@ public class AzureTranslate : MonoBehaviour
         {
             sw.Restart();
 
-            if (SettingsController.settings.TranslateLanguage == "0") {
+            if (true || SettingsController.settings.TranslateLanguage == "0") {
                 var fromLang = SettingsController.settings.AdjustedForeignLanguage();
                 var toLang = SettingsController.settings.AdjustedNativeLanguage();
 

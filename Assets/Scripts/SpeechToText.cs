@@ -109,15 +109,7 @@ public class SpeechToText : MonoBehaviour {
         lock (threadLocker) {
             if (outputText != null) {
                 if (SettingsController.settings != null) {
-                    string text = "";
-                    if (SettingsController.settings.SubtitleTrigger != "2") {
-                        text = Global.Text3;
-                    }
-                    if (SettingsController.settings.SubtitleTrigger == "2" && HoloFaceCore.faceDetected) {
-                        text = "";
-                    }
-
-                    outputText.text = text;
+                    outputText.text = Global.Text3;
                 }
             }
         }

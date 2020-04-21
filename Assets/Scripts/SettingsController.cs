@@ -12,11 +12,13 @@ public class Settings {
     public string TranslateLanguage { get; set; } = "0";
 
     public string AdjustedNativeLanguage() {
+        return "tr-TR";
         return AdjustLanguage(NativeLanguageCode);
     }
 
     public string AdjustedForeignLanguage() {
-        return AdjustLanguage(ForeignLanguageCode);
+        return "en-US";
+        //return AdjustLanguage(ForeignLanguageCode);
     }
 
     private static string AdjustLanguage(string code) {
@@ -31,10 +33,13 @@ public class SettingsController : MonoBehaviour {
 
     public static Settings settings;
 
+    const string KEY = "settings_3";
+
     private void Awake() {
-        var json = PlayerPrefs.GetString("settings", null);
-        if (json == null)
+        var json = PlayerPrefs.GetString(KEY, null);
+        if (string.IsNullOrWhiteSpace(json))
             json = JsonConvert.SerializeObject(new Settings());
+        Debug.Log("json>>" + json);
         var obj = JsonConvert.DeserializeObject<Settings>(json);
         settings = obj;
     }
@@ -49,11 +54,17 @@ public class SettingsController : MonoBehaviour {
             yield return req.SendWebRequest();
 
             var json = req.downloadHandler.text;
+            if (req.isHttpError || req.isNetworkError) {
+                yield return new WaitForSecondsRealtime(3f);
+                continue;
+            }
 
+        Debug.Log("json>>" + json);
             if (string.IsNullOrWhiteSpace(json)) {
                 json = JsonConvert.SerializeObject(new Settings());
             }
-            PlayerPrefs.SetString("settings", json);
+            
+            PlayerPrefs.SetString(KEY, json);
             PlayerPrefs.Save();
 
             settings = JsonConvert.DeserializeObject<Settings>(json);
